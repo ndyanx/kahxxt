@@ -43,7 +43,7 @@ class KahootHack:
                 else:
                     answers = {
                         **answers,
-                        question_index : {question: answer_index+1},
+                        question_index : {questionv: answer_index+1},
                     }
                 question_index += 1
         return answers
