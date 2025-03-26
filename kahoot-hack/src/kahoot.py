@@ -38,7 +38,7 @@ class KahootHack:
                 if answer.get('answer'):
                     answers = {
                         **answers,
-                        question_index : {questionv: answer['answer']},
+                        question_index : {questionv: html.unescape(answer['answer'])},
                     }
                 else:
                     answers = {
