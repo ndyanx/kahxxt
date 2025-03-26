@@ -1,4 +1,5 @@
-from html import unescape
+import html
+
 from enums import RequestMethod, RequestReturn
 from wrappers._aiohttp import AiohttpSG
 
@@ -26,14 +27,12 @@ class KahootHack:
         }
     
     def _get_answers(self, response: dict):
-        data = unescape(response)
-        questions = data['kahoot']['questions']
+        questions = response['kahoot']['questions']
         answers = {}
         question_index = 1
         for question in questions:
             if question['type'] in ("quiz", "open_ended"):
-                questionv = question['question'].replace("\u003Ci\u003E", '')
-                questionv = questionv.replace("\u003C/i\u003E", '')
+                questionv = html.unescape(question['question'])
                 answer, answer_index = next(
                     (choice, idx) for idx, choice in enumerate(question['choices']) if choice['correct'] == True)
                 if answer.get('answer'):

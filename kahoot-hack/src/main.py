@@ -30,7 +30,7 @@ async def shutdown_event():
 
 @app.get("/")
 async def root():
-    return JSONResponse({"message": "Joy paradox is working!"})
+    return JSONResponse({"message": "Joy paradox is working!, NDYANX"})
 
 @app.get("/room/{room_id}")
 async def room(room_id: str):
