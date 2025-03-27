@@ -1,5 +1,7 @@
 import html
 
+from bs4 import BeautifulSoup
+
 from enums import RequestMethod, RequestReturn
 from wrappers._aiohttp import AiohttpSG
 
@@ -26,19 +28,22 @@ class KahootHack:
             'x-kahoot-tracking': 'platform/Web',
         }
     
+    def _remove_labels(self, text: str):
+        return BeautifulSoup(text, "html.parser").get_text()
+    
     def _get_answers(self, response: dict):
         questions = response['kahoot']['questions']
         answers = {}
         question_index = 1
         for question in questions:
             if question['type'] in ("quiz", "open_ended"):
-                questionv = html.unescape(question['question'])
+                questionv = self._remove_labels(question['question'])
                 answer, answer_index = next(
                     (choice, idx) for idx, choice in enumerate(question['choices']) if choice['correct'] == True)
                 if answer.get('answer'):
                     answers = {
                         **answers,
-                        question_index : {questionv: html.unescape(answer['answer'])},
+                        question_index : {questionv: self._remove_labels(answer['answer'])},
                     }
                 else:
                     answers = {
