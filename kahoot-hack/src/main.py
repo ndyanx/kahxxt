@@ -28,6 +28,10 @@ async def shutdown_event():
     await SessionManagerAIOHTTP.close_session()
 
 
+@app.head("/")
+async def head_dato():
+    return {"mensaje": "Fuck you"}
+
 @app.get("/")
 async def root():
     return JSONResponse({"message": "Joy paradox is working!, NDYANX"})
