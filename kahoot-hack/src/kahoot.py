@@ -33,7 +33,7 @@ class KahootHack:
     
     def _get_answers(self, response: dict):
         questions = response['kahoot']['questions']
-        answers = {}
+        answers = []
         question_index = 1
         for question in questions:
             if question['type'] in ("quiz", "open_ended"):
@@ -41,17 +41,15 @@ class KahootHack:
                 answer, answer_index = next(
                     (choice, idx + 1) for idx, choice in enumerate(question['choices']) if choice['correct'] == True)
                 if answer.get('answer'):
-                    answers = {
-                        **answers,
-                        question_index : { 'question': questionv, 'answer': self._remove_labels(answer['answer'])},
-                    }
+                    answers.append({
+                        'number': question_index, 'question': questionv, 'answer': self._remove_labels(answer['answer'])},
+                    )
                 else:
-                    answers = {
-                        **answers,
-                        question_index : { 'question': questionv, 'answer': answer_index},
-                    }
+                    answers.append({
+                        'number': question_index, 'question': questionv, 'answer': answer_index},
+                    )
                 question_index += 1
-        return answers
+        return {'answers': answers}
     
     async def get_answers(self, room_id: str):
         response = await AiohttpSG.fetch(
