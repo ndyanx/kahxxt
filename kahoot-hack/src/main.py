@@ -31,7 +31,7 @@ async def shutdown_event():
 
 @app.head("/")
 async def head_dato():
-    return {"mensaje": "Fuck you"}
+    return {"message": "Fuck you"}
 
 @app.get("/")
 async def root():
@@ -46,11 +46,13 @@ async def room(room_id: str):
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=404)
 
-@app.get("/audio/{word}")
-async def audio(word: str):
+@app.get("/audio/{accent}/{word}")
+async def audio(accent: str, word: str):
+    if accent not in ('us', 'uk'):
+        return JSONResponse({"error": "Accent not supported, use us or uk, example /audio/us/hello"}, status_code=404)
     dictionary = DictionaryCambridge()
     try:
-        streaming_response = await dictionary.get_audio(word)
+        streaming_response = await dictionary.get_audio(accent, word)
         return streaming_response
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=404)

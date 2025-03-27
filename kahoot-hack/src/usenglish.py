@@ -41,13 +41,14 @@ class DictionaryCambridge:
             'sec-ch-ua-platform': '"Windows"',
         }
     
-    async def _get_audio(self, word: str, soup: BeautifulSoup):
+    async def _get_audio(self, accent: str, word: str, soup: BeautifulSoup):
         title = soup.find("title").text
         if not title.lower().startswith(word.lower()):
             raise Exception(f"Word not found: {word}")
         if len(soup.find_all('span', {'class': 'pron-info dpron-info'})) == 1:
             raise Exception(f"Audio not available for word: {word}")
-        audio = soup.find("audio", {"id": "audio2"})
+        type_id = 'audio1' if 'uk' == accent else 'audio2'
+        audio = soup.find("audio", {"id": type_id})
         path_mp3 = audio.find("source", {"type": "audio/mpeg"})["src"]
         audio_url = f'https://dictionary.cambridge.org{path_mp3}'
         streaming_response = await AiohttpSG.fetch(
@@ -58,13 +59,13 @@ class DictionaryCambridge:
         )
         return streaming_response
     
-    async def get_audio(self, word: str):
+    async def get_audio(self, accent: str, word: str):
         soup = await AiohttpSG.fetch(
             url=f'https://dictionary.cambridge.org/dictionary/english-spanish/{word}',
             request_method=RequestMethod.GET,
             request_return_type=RequestReturn.SOUP,
             headers=self._get_headers_webpage(),
         )
-        return await self._get_audio(word, soup)
+        return await self._get_audio(accent, word, soup)
         
         
