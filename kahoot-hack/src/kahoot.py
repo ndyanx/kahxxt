@@ -49,7 +49,7 @@ class KahootHack:
                         'number': question_index, 'question': questionv, 'answer': answer_index},
                     )
                 question_index += 1
-        return {'answers': answers}
+        return answers
     
     async def get_answers(self, room_id: str):
         response = await AiohttpSG.fetch(
