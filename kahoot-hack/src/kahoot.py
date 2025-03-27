@@ -39,16 +39,16 @@ class KahootHack:
             if question['type'] in ("quiz", "open_ended"):
                 questionv = self._remove_labels(question['question'])
                 answer, answer_index = next(
-                    (choice, idx) for idx, choice in enumerate(question['choices']) if choice['correct'] == True)
+                    (choice, idx + 1) for idx, choice in enumerate(question['choices']) if choice['correct'] == True)
                 if answer.get('answer'):
                     answers = {
                         **answers,
-                        question_index : {questionv: self._remove_labels(answer['answer'])},
+                        question_index : { 'question': questionv, 'answer': self._remove_labels(answer['answer'])},
                     }
                 else:
                     answers = {
                         **answers,
-                        question_index : {questionv: answer_index+1},
+                        question_index : { 'question': questionv, 'answer': answer_index},
                     }
                 question_index += 1
         return answers
