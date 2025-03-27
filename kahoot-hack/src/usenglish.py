@@ -45,6 +45,8 @@ class DictionaryCambridge:
         title = soup.find("title").text
         if not title.lower().startswith(word.lower()):
             raise Exception(f"Word not found: {word}")
+        if len(soup.find_all('span', {'class': 'pron-info dpron-info'})) == 1:
+            raise Exception(f"Audio not available for word: {word}")
         audio = soup.find("audio", {"id": "audio2"})
         path_mp3 = audio.find("source", {"type": "audio/mpeg"})["src"]
         audio_url = f'https://dictionary.cambridge.org{path_mp3}'
