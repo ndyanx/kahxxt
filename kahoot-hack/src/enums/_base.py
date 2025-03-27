@@ -12,4 +12,5 @@ class RequestReturn(str, Enum):
     TEXT = "text"
     JSON = "json"
     SOUP = "soup"
+    AUDIO = "audio"
     RESPONSE = "response"

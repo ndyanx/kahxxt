@@ -2,10 +2,12 @@ import logging
 
 import aiohttp
 
+from io import BytesIO
 from sys import platform
 
 from bs4 import BeautifulSoup
 from enums import RequestReturn, RequestMethod
+from fastapi.responses import StreamingResponse
 
 
 logger = logging.getLogger(__name__)
@@ -80,6 +82,10 @@ class AiohttpSG:
                 return BeautifulSoup(await response.text(), "html.parser")
             case RequestReturn.RESPONSE:
                 return response
+            case RequestReturn.AUDIO:
+                audio_data = await response.read()
+                audio_stream = BytesIO(audio_data)
+                return StreamingResponse(audio_stream, media_type="audio/mpeg")
             case _:
                 raise ValueError(
                     f"Unsupported request return type: {request_return_type}"

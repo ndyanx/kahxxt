@@ -52,12 +52,15 @@ class KahootHack:
         return answers
     
     async def get_answers(self, room_id: str):
-        response = await AiohttpSG.fetch(
-            url=f'https://kahoot.it/rest/challenges/pin/{room_id}',
-            request_method=RequestMethod.GET,
-            request_return_type=RequestReturn.JSON,
-            headers=self._get_headers(room_id),
-        )
+        try:
+            response = await AiohttpSG.fetch(
+                url=f'https://kahoot.it/rest/challenges/pin/{room_id}',
+                request_method=RequestMethod.GET,
+                request_return_type=RequestReturn.JSON,
+                headers=self._get_headers(room_id),
+            )
+        except Exception as e:
+            raise Exception(f"Room not found: {room_id}")
         
         return self._get_answers(response)
         
